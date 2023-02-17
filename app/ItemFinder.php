@@ -1,10 +1,10 @@
 <?php
 
-namespace Src;
+namespace App;
 
-use Src\Database\Database;
-use Src\API\PW;
-use Src\Logger;
+use App\Database\Database;
+use App\API\PW;
+use App\Logger;
 
 class ItemFinder
 {

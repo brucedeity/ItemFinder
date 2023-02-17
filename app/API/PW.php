@@ -1,10 +1,10 @@
 <?php
 
-namespace Src\API;
+namespace App\API;
 
 use Dotenv\Dotenv;
-use Src\API\Gamed;
-use Src\API\Structure;
+use App\API\Gamed;
+use App\API\Structure;
 
 class PW
 {

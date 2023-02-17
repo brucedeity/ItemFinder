@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\API;
+namespace App\API;
 use Dotenv\Dotenv;
 
 class Gamed

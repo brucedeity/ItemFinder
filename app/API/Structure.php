@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\API;
+namespace App\API;
 
 class Structure {
     public static function getStructure(string $version)

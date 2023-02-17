@@ -1,6 +1,6 @@
 <?php
 
-namespace Src;
+namespace App;
 class Logger
 {
     private $logFilePath;

@@ -2,14 +2,22 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Src\ItemFinder;
-use Src\API\PW;
+use App\ItemFinder;
+use App\API\PW;
 
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+if (!isset($argv[1])) {
+    echo 'Please provide an item id to search';
+    exit;
+}
 
-echo 'Starting the search for the item id: '. $argv[1]. PHP_EOL;
+$itemId = (int)$argv[1];
 
-$itemFinder = new ItemFinder($argv[1]);
+if (!is_int($itemId)) {
+    echo 'Item id must be an integer';
+    exit;
+}
+
+echo 'Starting the search for the item id: ' . $itemId . PHP_EOL;
+
+$itemFinder = new ItemFinder($itemId);
 $itemFinder->findItem();
