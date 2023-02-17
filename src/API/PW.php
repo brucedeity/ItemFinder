@@ -30,7 +30,7 @@ class PW
             //$role['pets'] = $this->getRolePetBadge($roleId);
             $role['equipment'] = $this->getRoleEquipment($roleId);
             $role['storehouse'] = $this->getRoleStoreHouse($roleId);
-            $role['task'] = $this->getRoleTask($roleId);
+            // $role['task'] = $this->getRoleTask($roleId);
         } else {
             $pack = pack("N*", -1, $roleId);
             $pack = $this->gamed->createHeader($this->data['code']['getRole'], $pack);
