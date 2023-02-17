@@ -14,7 +14,7 @@ class Database {
     private $pdo;
   
     public function __construct() {
-      $dotenv = Dotenv::createImmutable(__DIR__);
+      $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
       $dotenv->load();
   
       $this->host = $_ENV['DB_HOST'];
@@ -43,9 +43,9 @@ class Database {
 
     public function getAllUsers()
     {
-        $stmt = $this->db->prepare("SELECT ID FROM users");
+        $stmt = $this->pdo->prepare("SELECT ID FROM users");
         $stmt->execute();
-        return $stmt->fetch();
+        return $stmt->fetchAll();
     }
 
 

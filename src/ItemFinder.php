@@ -4,10 +4,13 @@ namespace Src;
 
 use Src\Database\Database;
 use Src\API\PW;
+use Src\Logger;
 
 class ItemFinder
 {
     private $itemId;
+
+    private $logger;
 
     public function __construct(int $itemId)
     {   
@@ -19,51 +22,76 @@ class ItemFinder
         $database = new Database();
         $users = $database->getAllUsers();
 
-        $inventoryItems = [];
-
-        $storeHouseItems = [];
+        echo 'found '. count($users). ' users accounts in database'.PHP_EOL;
 
         $pwapi = new PW;
 
+        $searchedRoles = 0;
+
+        $this->logger = new Logger();
+
         foreach ($users as $user) {
+
             $roles = $pwapi->getRoles($user['ID']);
 
             if (empty($roles)) continue;
 
-            foreach ($roles['roles'] as $key => $value) {
-                $role = $pwapi->getRole($key);
+            foreach ($roles['roles'] as $role) {
 
-                if (!is_array($role)) continue;
+                $searchedRoles++;
 
-                $inventoryItems = $this->searchRoleBag($role);
+                $roleInfo = $pwapi->getRole($role['id']);
 
-                $storeHouseItems = $this->searchRoleStoreHouse($role);
+                if (!is_array($roleInfo) OR !array_key_exists('base', $roleInfo)) {
+                    echo 'the role '. $role['name'] .', id: '. $role['id']. ' is not valid, skipping it.'.PHP_EOL;
+
+                    continue;
+                }
+
+                $this->logger->setRole($role);
+
+                $this->searchRoleBag($roleInfo);
+
+                $this->searchRoleStoreHouse($roleInfo);
             }
         }
 
-        return [
-            'storehouse' => $storeHouseItems,
-            'inventory' => $inventoryItems
-        ];
+        $this->logger->saveLog();
+
+        echo 'searched roles: '.$searchedRoles. PHP_EOL;
     }
 
-    public function searchRoleBag(array $role)
+    public function searchRoleBag(array $roleInfo)
     {
-        if (!array_key_exists('inv', $role['pocket'])) return;
+        if (!array_key_exists('inv', $roleInfo['pocket'])) return;
 
-        foreach ($role['pocket']['inv'] as $item) {
-            if ($item['id'] == $this->itemId) return $item;
+        foreach ($roleInfo['pocket']['inv'] as $item) {
+            if ($item['id'] == $this->itemId) {
+
+                $this->logger->logBag($item);
+
+                echo 'found '.$item['count'].' item(s) of id '.$this->itemId.' in the bag of role id: '.$roleInfo['base']['id'].PHP_EOL;
+
+                return $item;
+            }
         }
 
         return [];
     }
 
-    public function searchRoleStoreHouse(array $role)
+    public function searchRoleStoreHouse(array $roleInfo)
     {
-        if (!array_key_exists('store', $role['storehouse'])) return;
+        if (!array_key_exists('store', $roleInfo['storehouse'])) return;
 
-        foreach ($role['storehouse']['store'] as $item) {
-            if ($item['id'] == $this->itemId) return $item;
+        foreach ($roleInfo['storehouse']['store'] as $item) {
+            if ($item['id'] == $this->itemId) {
+
+                $this->logger->logStorehouse($item);
+
+                echo 'found '.$item['count'].' item(s) of id '.$this->itemId.' in the storehouse of role id: '.$roleInfo['base']['id'].PHP_EOL;
+
+                return $item;
+            }
         }
 
         return [];
