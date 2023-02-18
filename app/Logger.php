@@ -10,7 +10,7 @@ class Logger
     public function __construct()
     {
         $this->logFilePath = dirname(__DIR__) . '/logs/search ' . date('Y-m-d h-i-s') . '.log';
-        $this->logContent = "";
+        $this->logContent = [];
     }
 
     public function setRole(array $role)
@@ -20,20 +20,38 @@ class Logger
 
     public function logBag(array $item)
     {
-        $logEntry = "[Bag] found {$item['count']} units of the item id {$item['id']} for the role {$this->role['name']} id: {$this->role['id']} \n";
-        $this->logContent .= $logEntry;
+        $logEntry = [
+            'type' => 'bag',
+            'count' => $item['count'],
+            'itemId' => $item['id'],
+            'role' => [
+                'name' => $this->role['name'],
+                'id' => $this->role['id']
+            ]
+        ];
+        array_push($this->logContent, $logEntry);
     }
-
+    
     public function logStorehouse(array $item)
     {
-        $logEntry = "[Storehouse] found {$item['count']} units of the item id {$item['id']} for the role {$this->role['name']} id: {$this->role['id']} \n";
-        $this->logContent .= $logEntry;
+        $logEntry = [
+            'type' => 'storehouse',
+            'count' => $item['count'],
+            'itemId' => $item['id'],
+            'role' => [
+                'name' => $this->role['name'],
+                'id' => $this->role['id']
+            ]
+        ];
+        array_push($this->logContent, $logEntry);
     }
+    
 
     public function saveLog()
     {
+        $json = json_encode($this->logContent, JSON_PRETTY_PRINT);
         $fp = fopen($this->logFilePath, 'w');
-        fwrite($fp, $this->logContent);
+        fwrite($fp, $json);
         fclose($fp);
     }
 }

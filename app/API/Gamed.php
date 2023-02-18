@@ -263,8 +263,11 @@ class Gamed
                 $tmp = 0;
                 switch ($val) {
                     case 'int':
-                        $un = unpack("N", substr($rb, 0, 4));
+                        $un = @unpack("N", substr($rb, 0, 4));
                         $rb = substr($rb, 4);
+
+                        if (!is_array($un)) break;
+
                         $data[$key] = $un[1];
                         break;
                     case 'int64':
@@ -325,6 +328,10 @@ class Gamed
                         $data[$key] = $un[1];
                         break;
                 }
+                if ($key == 'mask' && !array_key_exists($key, $data)) {
+                    return false;
+                }
+
                 if ($val != 'cuint' and is_null($data[$key])) {
                     return false;
                 }
