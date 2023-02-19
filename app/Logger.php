@@ -23,7 +23,7 @@ class Logger
         $logEntry = [
             'role' => [
                 'name' => $this->role['name'],
-                'id' => $this->role['id']
+                'id' => $this->role['id'],
             ],
             'itemId' => $item['id'],
             'count' => $item['count'],
@@ -31,13 +31,13 @@ class Logger
         ];
         array_push($this->logContent, $logEntry);
     }
-    
+
     public function logStorehouse(array $item)
     {
         $logEntry = [
             'role' => [
                 'name' => $this->role['name'],
-                'id' => $this->role['id']
+                'id' => $this->role['id'],
             ],
             'itemId' => $item['id'],
             'count' => $item['count'],
@@ -45,7 +45,6 @@ class Logger
         ];
         array_push($this->logContent, $logEntry);
     }
-    
 
     public function saveLog()
     {

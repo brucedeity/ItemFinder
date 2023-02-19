@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>ItemFinder Results</title>
+        <link rel="icon" type="image/x-icon" href="favicon.ico" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <style>
@@ -53,7 +54,11 @@
     </head>
     <body>
         <div class="container">
-            <h2 class="text-center">ItemFinder Results</h2>
+            <div class="py-5 text-center">
+                <h2>PW Item Finder</h2>
+                <p class="lead">Search an item through all roles, please note that this can take a while to process!</p>
+            </div>
+            <h2 class="text-center"></h2>
             <div class="row">
                 <div class="col-md-6 offset-md-3">
                     <form id="search-form">
@@ -79,39 +84,41 @@
         </div>
 
         <script>
-$(document).ready(function () {
-    $("#search-form").submit(function (event) {
-		$("#search-results").html("");
-		
-        event.preventDefault();
-        var itemId = $("#itemId").val();
+            $(document).ready(function () {
+                $("#search-form").submit(function (event) {
+                    $("#search-results").html("");
 
-        if (itemId === "") {
-            $(".error-msg").text("Please enter an item ID.");
-        } else {
-            $(".error-msg").text("");
-            var startTime = new Date();
-            var intervalId = setInterval(function () {
-                var elapsedTime = Math.round((new Date() - startTime) / 1000);
-                $("#elapsed-time").show().text("Elapsed time: " + elapsedTime + " seconds");
+                    event.preventDefault();
+                    var itemId = $("#itemId").val();
 
-            }, 1000);
-            $(".spinner").show();
-            $("#searchBtn").prop('disabled', true);
-            $.get("search.php", { itemId: itemId }, function (response) {
-                clearInterval(intervalId);
-                $(".spinner").hide();
-                $("#search-results").html(response);
-                var endTime = new Date();
-                var elapsedTime = Math.round((endTime - startTime) / 1000);
-                $("#elapsed-time").show().text("Elapsed time: " + elapsedTime + " seconds");
+                    if (itemId === "") {
+                        $(".error-msg").text("Please enter an item ID.");
+                    } else {
+                        $(".error-msg").text("");
+                        var startTime = new Date();
+                        var intervalId = setInterval(function () {
+                            var elapsedTime = Math.round((new Date() - startTime) / 1000);
+                            $("#elapsed-time")
+                                .show()
+                                .text("Elapsed time: " + elapsedTime + " seconds");
+                        }, 1000);
+                        $(".spinner").show();
+                        $("#searchBtn").prop("disabled", true);
+                        $.get("search.php", { itemId: itemId }, function (response) {
+                            clearInterval(intervalId);
+                            $(".spinner").hide();
+                            $("#search-results").html(response);
+                            var endTime = new Date();
+                            var elapsedTime = Math.round((endTime - startTime) / 1000);
+                            $("#elapsed-time")
+                                .show()
+                                .text("Elapsed time: " + elapsedTime + " seconds");
 
-                $("#searchBtn").prop('disabled', false);
+                            $("#searchBtn").prop("disabled", false);
+                        });
+                    }
+                });
             });
-        }
-    });
-});
-
         </script>
     </body>
 </html>
