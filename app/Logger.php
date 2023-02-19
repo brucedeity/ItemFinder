@@ -21,13 +21,13 @@ class Logger
     public function logBag(array $item)
     {
         $logEntry = [
-            'type' => 'bag',
-            'count' => $item['count'],
-            'itemId' => $item['id'],
             'role' => [
                 'name' => $this->role['name'],
                 'id' => $this->role['id']
-            ]
+            ],
+            'itemId' => $item['id'],
+            'count' => $item['count'],
+            'type' => 'bag',
         ];
         array_push($this->logContent, $logEntry);
     }
@@ -35,13 +35,13 @@ class Logger
     public function logStorehouse(array $item)
     {
         $logEntry = [
-            'type' => 'storehouse',
-            'count' => $item['count'],
-            'itemId' => $item['id'],
             'role' => [
                 'name' => $this->role['name'],
                 'id' => $this->role['id']
-            ]
+            ],
+            'itemId' => $item['id'],
+            'count' => $item['count'],
+            'type' => 'storehouse',
         ];
         array_push($this->logContent, $logEntry);
     }
@@ -53,5 +53,10 @@ class Logger
         $fp = fopen($this->logFilePath, 'w');
         fwrite($fp, $json);
         fclose($fp);
+    }
+
+    public function getLogFilePath()
+    {
+        return $this->logFilePath;
     }
 }
